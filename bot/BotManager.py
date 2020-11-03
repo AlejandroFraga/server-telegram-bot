@@ -52,7 +52,7 @@ def top(update, context):
 
         pattern = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
 
-        with open('/var/auth.log') as fh:
+        with open('/var/log/auth.log') as fh:
             string = fh.readlines()
 
         lst = []
