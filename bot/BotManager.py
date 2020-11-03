@@ -1,10 +1,21 @@
 
+class BotManager(object):
+    chat_id: int = 0
+    token: str = ""
 
-def init(id, token):
+    def __init__(self,
+                 chat_id: int,
+                 token: str):
+
+        BotManager.chat_id = chat_id
+        BotManager.token = token
+
+def start_working():
+
     import logging
     from telegram.ext import Updater
 
-    updater = Updater(token=token, use_context=True)
+    updater = Updater(token=BotManager.token, use_context=True)
 
     dispatcher = updater.dispatcher
 
@@ -21,28 +32,27 @@ def init(id, token):
 def start(update, context):
     print("start called")
 
-    if update.effective_chat.id == id:
-        context.bot.send_message(chat_id=id, text="I'm a bot, please talk to me!")
+    if update.effective_chat.id == BotManager.chat_id:
+        context.bot.send_message(chat_id=BotManager.chat_id, text="I'm a bot, please talk to me!")
 
 def status(update, context):
     print("status called")
 
-    if update.effective_chat.id == id:
+    if update.effective_chat.id == BotManager.chat_id:
         import PcStatus
-        context.bot.send_message(chat_id=id, text=PcStatus.getStatus(), parse_mode="HTML")
+        context.bot.send_message(chat_id=BotManager.chat_id, text=PcStatus.getStatus(), parse_mode="HTML")
 
 
 def top(update, context):
     print("top called")
 
-    if update.effective_chat.id == id:
+    if update.effective_chat.id == BotManager.chat_id:
 
         import LogReader, re, collections
-        #context.bot = telegram.Bot(token=token)
 
         pattern = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
 
-        with open('/mnt/c/Users/alex_/Downloads/auth.log') as fh:
+        with open('/var/auth.log') as fh:
             string = fh.readlines()
 
         lst = []
@@ -82,11 +92,11 @@ def top(update, context):
 
         newMap = sorted(newMap.items(), key=lambda item: item[1], reverse=True)
 
-        context.bot.send_message(chat_id=id, text=LogReader.getMap(newMap, total))
+        context.bot.send_message(chat_id=BotManager.chat_id, text=LogReader.getMap(newMap, total))
 
-def restart():
+def restart(update, context):
     print("restart called")
 
-    import os
-
-    os.system("sudo shutdown -r now")
+    if update.effective_chat.id == BotManager.chat_id:
+        import os
+        os.system("sudo shutdown -r now")
