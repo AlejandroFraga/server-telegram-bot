@@ -101,11 +101,11 @@ def speedtest(update: Update, context: CallbackContext):
             update.message.reply_text("Wait for the result")
 
             command = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
-            result = str(command.stdout).replace("\n", '\n')
+            result = str(command.stdout).replace("\\n", "\n")
             result = str(command.stdout).replace("\\r", "   ")
             if result.__sizeof__() > 3:
                 result = result[2:-1]
-            update.message.reply_text(result)
+            update.message.reply_text(text=result)
             BotManager.waiting_speedtest = False
 
 
