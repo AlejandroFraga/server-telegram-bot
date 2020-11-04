@@ -112,13 +112,18 @@ def top(update: Update, context: CallbackContext):
             string = fh.readlines()
 
         lst = []
+        ignored_ips = ["192.168.1.151", "192.168.1.1", "0.0.0.0"]
 
         for line in string:
             line = line.rstrip()
             result = re.search(pattern, line)
-            if result:
-                lst.append(result[0])
-                print(line)
+            if result and result not in ignored_ips:
+                if re.search('Accepted', line):
+                    lst.append(result[0])
+                    print("Accepted: " + result[0])
+                elif re.search('Failed', line):
+                    lst.append(result[0])
+                    print("Failed: " + result[0])
 
         lst = sorted(lst, key=lambda ip: \
             (int(ip.split(".")[0]),
