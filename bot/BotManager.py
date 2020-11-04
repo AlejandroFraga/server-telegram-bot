@@ -118,6 +118,7 @@ def top(update: Update, context: CallbackContext):
             result = re.search(pattern, line)
             if result:
                 lst.append(result[0])
+                print(line)
 
         lst = sorted(lst, key=lambda ip: \
             (int(ip.split(".")[0]),
