@@ -1,5 +1,6 @@
 import logging
 import PcStatus
+import subprocess
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
@@ -91,12 +92,11 @@ def status(update: Update, context: CallbackContext):
 def speedtest(update: Update, context: CallbackContext):
     print("speedtest called")
 
-    update.message.reply_text("Wait for the result")
+    if update.effective_chat.id == BotManager.chat_id:
+        update.message.reply_text("Wait for the result")
 
-    import subprocess
-
-    result = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
-    update.message.reply_text(result.stdout)
+        result = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
+        update.message.reply_text(str(result.stdout))
 
 
 def top(update: Update, context: CallbackContext):
