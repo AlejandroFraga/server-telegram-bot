@@ -117,7 +117,7 @@ def top(update: Update, context: CallbackContext):
         for line in string:
             line = line.rstrip()
             result = re.search(pattern, line)
-            if result and result not in ignored_ips:
+            if result and result[0] not in ignored_ips:
                 if re.search('Accepted', line):
                     lst.append(result[0])
                     print("Accepted: " + result[0])
