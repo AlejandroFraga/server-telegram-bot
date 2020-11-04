@@ -99,8 +99,6 @@ def speedtest(update: Update, context: CallbackContext):
     if update.effective_chat.id == BotManager.chat_id:
         if BotManager.waiting_speedtest:
             update.message.delete()
-            if BotManager.waiting_speedtest.text != "Wait for the result, please":
-                BotManager.waiting_speedtest.edit_text("Wait for the result, please")
         else:
             BotManager.waiting_speedtest = update.message.reply_text("Please, wait for the result, it takes ~30-40 sec")
 
