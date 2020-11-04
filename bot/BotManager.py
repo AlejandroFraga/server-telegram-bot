@@ -16,7 +16,7 @@ class BotManager(object):
     chat_id: int = 0
     token: str = ""
     updater = ""
-    waiting_speedtest = False
+    waiting_speedtest = 0
 
     def __init__(self,
                  chat_id: int,
@@ -94,18 +94,16 @@ def speedtest(update: Update, context: CallbackContext):
     print("speedtest called")
 
     if update.effective_chat.id == BotManager.chat_id:
-        if BotManager.waiting_speedtest:
-            update.message.reply_text("Wait for the result, please")
+        if BotManager.waiting_speedtest != 0:
+            BotManager.waiting_speedtest.edit_text("Wait for the result, please")
         else:
-            BotManager.waiting_speedtest = True
-            update.message.reply_text("Wait for the result")
+            BotManager.waiting_speedtest = update.message.reply_text("Wait for the result, it takes ~30-40 sec")
 
             command = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
             result = str(command.stdout).replace("\\n", "\n").replace("\\r", "")
             if result.__sizeof__() > 3:
                 result = result[2:-1]
-            update.message.reply_text(text=result)
-            BotManager.waiting_speedtest = False
+            BotManager.waiting_speedtest.edit_text(result)
 
 
 def top(update: Update, context: CallbackContext):
