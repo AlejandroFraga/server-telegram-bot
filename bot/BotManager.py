@@ -1,6 +1,8 @@
 import logging
 import PcStatus
 import subprocess
+import threading
+import time
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
@@ -99,12 +101,17 @@ def speedtest(update: Update, context: CallbackContext):
         else:
             BotManager.waiting_speedtest = update.message.reply_text("Please, wait for the result, it takes ~30-40 sec")
 
-            command = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
-            result = str(command.stdout).replace("\\n", "\n").replace("\\r", "")
-            if result.__sizeof__() > 3:
-                result = result[2:-1]
-            BotManager.waiting_speedtest.edit_text(result)
-            BotManager.waiting_speedtest = 0
+            thread = threading.Thread(target=make_speedtest)
+            thread.start()
+
+
+def make_speedtest():
+    command = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
+    result = str(command.stdout).replace("\\n", "\n").replace("\\r", "")
+    if result.__sizeof__() > 3:
+        result = result[2:-1]
+    BotManager.waiting_speedtest.edit_text(result)
+    BotManager.waiting_speedtest = 0
 
 
 def top(update: Update, context: CallbackContext):
