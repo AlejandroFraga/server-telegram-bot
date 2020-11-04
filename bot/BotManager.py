@@ -124,6 +124,9 @@ def top(update: Update, context: CallbackContext):
                 elif re.search('Failed', line):
                     lst.append(result[0])
                     print("Failed: " + result[0])
+                else:
+                    lst.append(result[0])
+                    print(line)
 
         lst = sorted(lst, key=lambda ip: \
             (int(ip.split(".")[0]),
