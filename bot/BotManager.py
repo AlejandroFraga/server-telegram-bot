@@ -95,8 +95,12 @@ def speedtest(update: Update, context: CallbackContext):
     if update.effective_chat.id == BotManager.chat_id:
         update.message.reply_text("Wait for the result")
 
-        result = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
-        update.message.reply_text(str(result.stdout))
+        command = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
+        result = str(command.stdout).replace("\\n", "\n")
+        result = str(command.stdout).replace("\\t", "   ")
+        if result.len > 3:
+            result = result[2:-1]
+        update.message.reply_text(result)
 
 
 def top(update: Update, context: CallbackContext):
