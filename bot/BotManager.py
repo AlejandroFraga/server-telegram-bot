@@ -6,6 +6,7 @@ import time
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+from telegram.message import Message
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -18,7 +19,7 @@ class BotManager(object):
     chat_id: int = 0
     token: str = ""
     updater = ""
-    waiting_speedtest = 0
+    waiting_speedtest: Message = None
 
     def __init__(self,
                  chat_id: int,
@@ -96,8 +97,10 @@ def speedtest(update: Update, context: CallbackContext):
     print("speedtest called")
 
     if update.effective_chat.id == BotManager.chat_id:
-        if BotManager.waiting_speedtest != 0:
-            BotManager.waiting_speedtest.edit_text("Wait for the result, please")
+        if BotManager.waiting_speedtest:
+            update.message.delete()
+            if BotManager.waiting_speedtest.text != "Wait for the result, please":
+                BotManager.waiting_speedtest.edit_text("Wait for the result, please")
         else:
             BotManager.waiting_speedtest = update.message.reply_text("Please, wait for the result, it takes ~30-40 sec")
 
@@ -111,7 +114,7 @@ def make_speedtest():
     if result.__sizeof__() > 3:
         result = result[2:-1]
     BotManager.waiting_speedtest.edit_text(result)
-    BotManager.waiting_speedtest = 0
+    BotManager.waiting_speedtest = None
 
 
 def top(update: Update, context: CallbackContext):
