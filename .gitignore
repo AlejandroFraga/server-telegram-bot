@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # PyCharm Idea folder
-bot/.idea/
+*/.idea/
