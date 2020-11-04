@@ -91,9 +91,12 @@ def status(update: Update, context: CallbackContext):
 def speedtest(update: Update, context: CallbackContext):
     print("speedtest called")
 
+    update.message.reply_text("Wait for the result")
+
     import subprocess
+
     result = subprocess.run(['speedtest'], stdout=subprocess.PIPE)
-    print(result.stdout)
+    update.message.reply_text(result.stdout)
 
 
 def top(update: Update, context: CallbackContext):
