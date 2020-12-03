@@ -14,8 +14,11 @@ A telegram bot to monitor the load, status and security of your server, that sen
 After I manually configured my personal server, I thought about the best way to monitor it.
 The first thing that came to my mind was the utopia that the server monitored itself.
 It would tell me who (at least the IP direction) is trying to connect to the the server as it happens whitout me having to login in and checking every time.
-It would even give me the option to turn offor restart remotely the server at any time, but specially when such fraudulent behaviour is detected.
-I would be able to do internet speed tests,
+It would even give me the option to turn off or restart remotely the server at any time, but specially when such fraudulent behaviour is detected.
+I would be able to do internet speed tests, to test latency and bandwith.
+I would be able to retrieve live information on running processes and system utilization (CPU, memory, disks, network, sensors).
+And all of this, without having to create my own webpage, app or portal in which see this information.
+Saving me a lot of time and work creating the 
 
 ## Project Goals
 
