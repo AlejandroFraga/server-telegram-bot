@@ -73,12 +73,10 @@ fi
 # Create the logs directory
 printf "\nCreating the logs directory...\n"
 
-mkdir bot/logs
-
 # Change permissions to only allow the owner to read, write and execute the server-telegram-bot files 
 printf "\nChanging permissions...\n\n"
 
-chmod 700 -R *
+chmod u+x -R *
 
 # Set the user id to talk to the telegram-bot-server
 read -p "Please insert the telegram user id which will talk to the telegram-bot-server: " -r REPLY; echo # Jump line
