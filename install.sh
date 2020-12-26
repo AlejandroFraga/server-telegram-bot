@@ -68,44 +68,44 @@ chmod u+x -R *
 
 # Set the user id to talk to the telegram-bot-server
 read -p "Please insert the telegram user id which will talk to the telegram-bot-server: " -r REPLY; echo # Jump line
-if [ -n $REPLY ]; then
+if [ -n "$REPLY" ]; then
 	sed -i -e 's,userid=".*",userid="'"$REPLY"'",g' $launch_file
 fi
 
 # Set the api token of the telegram-bot-server
 read -p "Please insert the Telegram Bot API Token: " -r REPLY; echo # Jump line
-if [ -n $REPLY ]; then
+if [ -n "$REPLY" ]; then
 	sed -i -e 's,apitoken=".*",apitoken="'"$REPLY"'",g' $launch_file
 fi
 
 # [Optional] Activate the auto update option in the launch script
 # Usefull for Dev who doesn't want to be copying by hand in every modification and relaunch of the bot
-read -p "Do you want to enable the update when launching option for Devs? [Y/y] " -r REPLY; echo # Jump line
+read -p "Do you want to enable the update when launching option for Devs? [Y/y] " -n 1 -r REPLY; echo # Jump line
 if [[ $REPLY =~ ^[Yy]$ ]]; then
 	sed -i -e 's,#\.\/'"$update_file"',\.\/'"$update_file"',g' $launch_file
 
 	read -p "Enter the username of the server to update: " -r REPLY; echo # Jump line
-	if [ -n $REPLY ]; then
+	if [ -n "$REPLY" ]; then
 		sed -i -e 's,user=".*",user="'"$REPLY"'",g' $update_file
 	fi
 
 	read -p "Enter the direction (ip or url) of the server: " -r REPLY; echo # Jump line
-	if [ -n $REPLY ]; then
+	if [ -n "$REPLY" ]; then
 		sed -i -e 's,server=".*",server="'"$REPLY"'",g' $update_file
 	fi
 
 	read -p "Enter the directory/file/s you want to copy from the server: " -r REPLY; echo # Jump line
-	if [ -n $REPLY ]; then
+	if [ -n "$REPLY" ]; then
 		sed -i -e 's,copy=".*",copy="'"$REPLY"'",g' $update_file
 	fi
 
 	read -p "Enter the directory/file/s you want to paste to the server: " -r REPLY; echo # Jump line
-	if [ -n $REPLY ]; then
+	if [ -n "$REPLY" ]; then
 		sed -i -e 's,paste=".*",paste="'"$REPLY"'",g' $update_file
 	fi
 
 	read -p "Enter the password of the user of the server: " -s -r REPLY; echo # Jump line
-	if [ -n $REPLY ]; then
+	if [ -n "$REPLY" ]; then
 		sed -i -e 's,password=".*",password="'"$REPLY"'",g' $update_file
 	fi
 fi
