@@ -22,4 +22,8 @@ if [ $? -eq 0 ]; then
 
     chmod -v u+x $paste*
 
+else
+
+	printf "\nCan't establish connection to update...\n\n"
+
 fi
