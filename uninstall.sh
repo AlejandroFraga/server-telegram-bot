@@ -31,9 +31,8 @@ if [ "${PWD##*/}" == "server-telegram-bot" ]; then
 
 	cd ../
 else
-
 	rm -- "$0"
 fi
 
 # Remove the repository
-rm -rv server-telegram-bot
+rm -rfv server-telegram-bot
