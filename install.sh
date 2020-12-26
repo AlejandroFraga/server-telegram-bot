@@ -5,6 +5,10 @@ launch_file="launch_bot.sh"
 update_file="update_bot.sh"
 welcome="Welcome to the installation of the telegram-bot-server. Press enter to start..."
 
+# Change the working directory to the install.sh directory to avoid problems
+cd ${0%/*}
+
+# Welcome message
 read -p "$welcome" -s -r REPLY; echo # Jump line
 
 # Install python3

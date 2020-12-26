@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Change the working directory to the uninstall.sh directory to avoid problems
+cd ${0%/*}
+
 # Remove git
 printf "\nUninstalling git...\n\n"
 sudo apt-get remove git

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Change the working directory to the uninstall.sh directory to avoid problems
+cd ${0%/*}
+
 # Stop the bot before launching a new one, or there will be problems polling the updates
 ./stop_bot.sh
 
