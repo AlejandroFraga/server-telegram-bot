@@ -1,0 +1,35 @@
+#!/usr/bin/expect -f
+
+send "\nDownloading the updated files...\n\n"
+
+# Username
+set user [lindex $argv 0];
+
+# Direction (ip or url)
+set server [lindex $argv 1];
+
+# Files or folder to copy from
+set copy [lindex $argv 2];
+
+# Files or folder to paste to
+set paste [lindex $argv 3];
+
+# Password
+set password [lindex $argv 4];
+
+set prompt "#|%|>|\\\$"
+
+set timeout 5
+
+spawn sftp $user@$server:$copy $paste
+
+expect {
+    timeout  { exit 1 }
+    "*No route*" { exit 1 }
+    "*(yes/no)" { send "yes\r"; exp_continue }
+    "*password:" { send "$password\r"; exp_continue }
+    -re $prompt { }
+    eof { exit 1 }
+}
+
+expect $prompt
