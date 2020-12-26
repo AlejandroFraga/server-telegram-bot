@@ -114,6 +114,8 @@ fi
 printf "\nMaking the first speedtest so we accept the policy and check that works...\n\n"
 speedtest
 
+printf "\nInstallation process ended\n\n"
+
 read -p "Do you want to launch the bot? " -n 1 -r REPLY; echo # Jump line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
