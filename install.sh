@@ -111,7 +111,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Make the first speedtest so we accept the policy and check that works
-printf "\nMaking the first speedtest so we accept the policy and check that works...\n\n"
+printf "\nMaking the first speedtest so we accept the policy and check that works...\n"
 speedtest
 
 printf "\nInstallation process ended\n\n"
