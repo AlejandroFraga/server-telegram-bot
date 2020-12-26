@@ -29,14 +29,11 @@ sudo apt-get remove expect
 # Check if we are inside the server-telegram-bot directory
 if [ "${PWD##*/}" == "server-telegram-bot" ]; then
 
-	# Remove the repository
-	rm -rv *
-
+	cd ../
 else
 
-	# Remove the repository
-	rm -rv server-telegram-bot/*
-
 	rm -- "$0"
-
 fi
+
+# Remove the repository
+rm -rv server-telegram-bot

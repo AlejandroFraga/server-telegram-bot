@@ -3,31 +3,26 @@
 # Some variables
 launch_file="launch_bot.sh"
 update_file="update_bot.sh"
-
 welcome="Welcome to the installation of the telegram-bot-server. Press enter to start..."
 
 read -p "$welcome" -s -r REPLY; echo # Jump line
 
 # Install python3
 printf "\nInstalling python3...\n\n"
-
 sudo apt-get install python3
 
 # Install python3 pip to manage packages
 printf "\nInstalling python3 pip...\n\n"
-
 sudo apt-get install python3-pip
 
 # Install python-telegram-bot, psutil and emoji packages
 printf "\nInstalling pip packages...\n\n"
-
 pip3 install python-telegram-bot --upgrade
 pip3 install psutil --upgrade
 pip3 install emoji --upgrade
 
 # Prepare to install speedtest
 printf "\nInstalling speedtest...\n\n"
-
 sudo apt-get install gnupg1 apt-transport-https dirmngr
 export INSTALL_KEY=379CE192D401AB61
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
@@ -42,40 +37,29 @@ sudo apt-get install speedtest
 
 # [Optional] Install expect for Devs to update the server-telegram-bot files by automatic sftp download in launch
 printf "\n[Optional] Installing expect...\n\n"
-
 sudo apt-get install expect
 
 # Check if we are inside the server-telegram-bot directory
-if [ "${PWD##*/}" == "server-telegram-bot" ]; then
-
-	# Copy this file to the previous directory, so after uninstalling, can be easily installed if desired
-	printf "\nCopying this file to the previous directory...\n"
-	
-	cp "$0" ../
-
-else
+if [ "${PWD##*/}" != "server-telegram-bot" ]; then
 
 	# Install git to clone the repository
 	printf "\nInstalling git...\n\n"
-	
 	sudo apt-get install git
 
 	# Clone the repository
 	printf "\nCloning the GitHub repository...\n\n"
-	
 	git clone https://github.com/AlejandroFraga/server-telegram-bot
-	
+
+	# Remove the install file outside the repository
+	rm -- "$0"
+
 	# Move inside the project directory
 	cd server-telegram-bot
 
 fi
 
-# Create the logs directory
-printf "\nCreating the logs directory...\n"
-
 # Change permissions to only allow the owner to read, write and execute the server-telegram-bot files 
 printf "\nChanging permissions...\n\n"
-
 chmod u+x -R *
 
 # Set the user id to talk to the telegram-bot-server
@@ -124,7 +108,6 @@ fi
 
 # Make the first speedtest so we accept the policy and check that works
 printf "\nMaking the first speedtest so we accept the policy and check that works...\n\n"
-
 speedtest
 
 read -p "Do you want to launch the bot? " -n 1 -r REPLY; echo # Jump line
