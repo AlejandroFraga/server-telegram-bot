@@ -78,7 +78,7 @@ fi
 # Usefull for Dev who doesn't want to be copying by hand in every modification and relaunch of the bot
 read -p "Do you want to enable the update when launching option for Devs? [Y/y] " -r REPLY; echo # Jump line
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-	sed -i -e 's,#\.\/'"$update_file"',\.\'"$update_file"',g' $launch_file
+	sed -i -e 's,#\.\/'"$update_file"',\.\/'"$update_file"',g' $launch_file
 
 	read -p "Enter the username of the server to update: " -r REPLY; echo # Jump line
 	if [ -n $REPLY ]; then
