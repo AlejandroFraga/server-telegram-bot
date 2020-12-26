@@ -24,7 +24,7 @@ Saving me a lot of time and work creating the
 ## Download and Instalation
 
 ```sh
-$ wget ...
+$ wget https://raw.githubusercontent.com/AlejandroFraga/server-telegram-bot/main/install.sh
 $ sudo chmod u+x install.sh
 $ ./install.sh
 ```
