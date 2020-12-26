@@ -5,6 +5,7 @@ A telegram bot to monitor the load, status and security of your server, that sen
 ## Table of contents
 
 - [Description](#description)
+- [Download and Instalation](#download-and-instalation)
 - [Project Goals](#project-goals)
 - [Posible future improvements](#posible-future-improvements)
 - [Tools and libraries](#tools-and-libraries)
@@ -20,13 +21,22 @@ I would be able to retrieve live information on running processes and system uti
 And all of this, without having to create my own webpage, app or portal in which see this information.
 Saving me a lot of time and work creating the 
 
+## Download and Instalation
+
+```sh
+$ wget ...
+$ sudo chmod u+x install.sh
+$ ./install.sh
+```
+
 ## Project Goals
 
 WIP
 
 ## Posible future improvements
 
-WIP
+ - - [ ] Command to see the access tries in detail
+ - - [ ] Control message length limits
 
 ## Tools and libraries
 
