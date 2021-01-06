@@ -12,9 +12,10 @@ class Callback(Enum):
     # General callbacks 1XX
     general = 1
     dismiss = 100
-    shutdown = 101
-    restart = 102
-    stop = 103
+    block = 101
+    shutdown = 102
+    restart = 103
+    stop = 104
 
     # Status callbacks 2XX
     status = 2
@@ -29,8 +30,6 @@ class Callback(Enum):
 
 dismiss = [strings.dismiss_button_text, get_value(Callback.dismiss)]
 
-shutdown = [strings.shutdown_button_text, get_value(Callback.shutdown)]
-restart = [strings.restart_button_text, get_value(Callback.restart)]
 stop = [strings.stop_button_text, get_value(Callback.stop.value)]
 
 back_info = [strings.back_button_text, get_value(Callback.info)]
@@ -41,3 +40,8 @@ ram = [strings.ram_button_text, get_value(Callback.ram)]
 processes = [strings.proc_button_text, get_value(Callback.processes)]
 net = [strings.net_button_text, get_value(Callback.net)]
 disks = [strings.disks_button_text, get_value(Callback.disks)]
+
+block = [strings.block_button_text, get_value(Callback.block)]
+
+restart = [strings.restart_button_text, get_value(Callback.restart)]
+shutdown = [strings.shutdown_button_text, get_value(Callback.shutdown)]

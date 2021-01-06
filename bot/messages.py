@@ -18,6 +18,10 @@ from data_helper import is_str, is_list, is_list_of_size, get_date_hour, format_
 # MESSAGES
 
 
+def stop_message():
+    return strings.stop_text, [buttons.stop], [2]
+
+
 def info_message():
     text = ':information: Info' + '\n\n' \
            + format_table_row('Cores', str(psutil.cpu_count(True))) \
@@ -223,16 +227,20 @@ def top_message(top_result: str = ''):
     return strings.top_text + top_result, None, None
 
 
+def block_message(ip: str):
+
+    block_button = buttons.block.copy()
+    block_button[1] += strings.hyphen + ip
+
+    return strings.block_text + ip + strings.question_mark, [block_button], [2]
+
+
 def restart_message():
     return strings.restart_text, [buttons.restart], [2]
 
 
 def shutdown_message():
     return strings.shutdown_text, [buttons.shutdown], [2]
-
-
-def stop_message():
-    return strings.stop_text, [buttons.stop], [2]
 
 
 def help_message():

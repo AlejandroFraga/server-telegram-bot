@@ -7,7 +7,7 @@ from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
 import buttons
 import messages
 import strings
-from data_helper import format_speedtest, get_value
+from data_helper import format_speedtest, get_value, get_first_ip
 
 
 class CommandManager:
@@ -32,6 +32,7 @@ class CommandManager:
         dispatcher.add_handler(CommandHandler(strings.command_status, self.command_status))
         dispatcher.add_handler(CommandHandler(strings.command_speedtest, self.command_speedtest))
         dispatcher.add_handler(CommandHandler(strings.command_top, self.command_top))
+        dispatcher.add_handler(CommandHandler(strings.command_block, self.command_block))
         dispatcher.add_handler(CommandHandler(strings.command_restart, self.command_restart))
         dispatcher.add_handler(CommandHandler(strings.command_shutdown, self.command_shutdown))
         dispatcher.add_handler(CommandHandler(strings.command_help, self.command_help))
@@ -45,6 +46,11 @@ class CommandManager:
         if update.effective_chat.id == self.chat_id:
             # Get the help message and send it
             self.msg_mng.send_message(messages.help_message(), update.message.message_id)
+
+    def command_stop(self, update: Update, context: CallbackContext):
+
+        if update.effective_chat.id == self.chat_id:
+            self.msg_mng.send_message(messages.stop_message(), update.message.message_id)
 
     def command_status(self, update: Update, context: CallbackContext):
 
@@ -80,6 +86,15 @@ class CommandManager:
             text = self.bot_mng.daemon_mng.top()
             self.msg_mng.send_message(messages.top_message(text), update.message.message_id)
 
+    def command_block(self, update: Update, context: CallbackContext):
+
+        if update.effective_chat.id == self.chat_id:
+            ip: str = get_first_ip(update.message.text)
+
+            #TODO Improve and send help if not ip
+            if ip is not None and ip.__len__() > 0:
+                self.msg_mng.send_message(messages.block_message(ip), update.message.message_id)
+
     def command_restart(self, update: Update, context: CallbackContext):
 
         if update.effective_chat.id == self.chat_id:
@@ -89,11 +104,6 @@ class CommandManager:
 
         if update.effective_chat.id == self.chat_id:
             self.msg_mng.send_message(messages.shutdown_message(), update.message.message_id)
-
-    def command_stop(self, update: Update, context: CallbackContext):
-
-        if update.effective_chat.id == self.chat_id:
-            self.msg_mng.send_message(messages.stop_message(), update.message.message_id)
 
     def command_help(self, update: Update, context: CallbackContext):
 
@@ -118,6 +128,16 @@ class CallbackManager:
     def __dismiss_callback(self, query: CallbackQuery):
 
         self.__delete_message_and_reply(query.message)
+
+    def __block_callback(self, query: CallbackQuery):
+
+        self.__delete_message_and_reply(query.message)
+
+        ip: str = get_first_ip(query.data)
+
+        self.bot_mng.block_ip(ip)
+
+        self.msg_mng.send_message(strings.block_callback_text + ip)
 
     def __shutdown_callback(self, query: CallbackQuery):
 
@@ -147,6 +167,9 @@ class CallbackManager:
 
         if query.data == get_value(buttons.Callback.dismiss):
             self.__dismiss_callback(query)
+
+        elif query.data.startswith(get_value(buttons.Callback.block)):
+            self.__block_callback(query)
 
         elif query.data == get_value(buttons.Callback.shutdown):
             self.__shutdown_callback(query)

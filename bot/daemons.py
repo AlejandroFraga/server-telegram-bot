@@ -90,7 +90,10 @@ class DaemonManager:
                + format_link(strings.location_text, strings.iplocation_url + ip) + strings.break_line \
                + format_table_row(line, separator=False)
 
-        self.msg_mng.send_message([text, [buttons.shutdown], [2]])
+        block_button = buttons.block.copy()
+        block_button[1] += strings.hyphen + ip
+
+        self.msg_mng.send_message([text, [block_button, buttons.shutdown], [3, 3]])
 
     def __add_line(self, ip: str, line: str, warn: bool = True):
 

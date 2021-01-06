@@ -27,6 +27,7 @@ break_line: str = '\n'
 colon: str = ':'
 hyphen: str = '-'
 triple_dots: str = '...'
+question_mark: str = '?'
 
 # Logs
 log_folder: str = 'logs/'
@@ -38,6 +39,7 @@ command_stop: str = 'stop'
 command_status: str = 'status'
 command_speedtest: str = 'speedtest'
 command_top: str = 'top'
+command_block: str = 'block'
 command_restart: str = 'restart'
 command_shutdown: str = 'shutdown'
 command_help: str = 'help'
@@ -74,6 +76,14 @@ speedtest_bash: str = 'speedtest'
 utf_8: str = 'utf-8'
 
 # SECTIONS
+
+# Stop
+stop_text: str = 'Are you sure you want to <b>stop the server bot</b>?'
+stop_button_text: str = ':stop_sign: Stop'
+stop_callback_text: str = 'Stopping...'
+
+# Top
+top_text: str = ':1st_place_medal: Top access tries' + break_line + break_line
 
 # Safety
 auth_log: str = '/var/log/auth.log'
@@ -117,23 +127,20 @@ disks_button_text: str = ':computer_disk: Disks'
 # Speedtest
 speedtest_wait_test: str = "Please, wait for the result"
 
-# Shutdown
-shutdown_text: str = 'Are you sure you want to <b>shutdown the server</b>?'
-shutdown_button_text: str = ':mobile_phone_off: Shutdown'
-shutdown_callback_text: str = 'Shutting down...'
+# Block
+block_text: str = 'Are you sure you want to <b>block the IP</b> '
+block_button_text: str = ':shield: Block'
+block_callback_text: str = 'IP Blocked: '
 
 # Restart
 restart_text: str = 'Are you sure you want to <b>restart the server</b>?'
 restart_button_text: str = ':repeat_button: Restart'
 restart_callback_text: str = 'Restarting...'
 
-# Stop
-stop_text: str = 'Are you sure you want to <b>stop the server bot</b>?'
-stop_button_text: str = ':stop_sign: Stop'
-stop_callback_text: str = 'Stopping...'
-
-# Top
-top_text: str = ':1st_place_medal: Top access tries' + break_line + break_line
+# Shutdown
+shutdown_text: str = 'Are you sure you want to <b>shutdown the server</b>?'
+shutdown_button_text: str = ':mobile_phone_off: Shutdown'
+shutdown_callback_text: str = 'Shutting down...'
 
 # Help
 help_text: str = 'Server Telegram Bot' + break_line \

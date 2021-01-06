@@ -73,20 +73,13 @@ class BotManager:
         self.updater.stop()
 
     @staticmethod
-    def quit_bot():
-        """
-        Function that stops the bot
-        """
-
-        os.kill(os.getpid(), signal.SIGINT)
-
-    @staticmethod
-    def shutdown_server():
+    def block_ip(ip: str):
         """
         Function that shutdowns the server
         """
 
-        os.system("sudo shutdown now")
+        if ip is not None and ip.__len__() > 0:
+            os.system('sudo iptables -A INPUT -s ' + ip + ' -j DROP')
 
     @staticmethod
     def restart_server():
@@ -94,7 +87,23 @@ class BotManager:
         Function that restarts the server
         """
 
-        os.system("sudo shutdown -r now")
+        os.system('sudo shutdown -r now')
+
+    @staticmethod
+    def shutdown_server():
+        """
+        Function that shutdowns the server
+        """
+
+        os.system('sudo shutdown now')
+
+    @staticmethod
+    def quit_bot():
+        """
+        Function that stops the bot
+        """
+
+        os.kill(os.getpid(), signal.SIGINT)
 
 
 def main(args):
