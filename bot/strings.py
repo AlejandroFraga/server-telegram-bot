@@ -156,6 +156,7 @@ help_text: str = 'Server Telegram Bot' + break_line \
                  + '/status - Status of the server (CPU, RAM...)' + break_line \
                  + '/speedtest - Internet speed test' + break_line \
                  + '/top - Top access tries to the server' + break_line \
+                 + '/block - Block an IP with iptables' + break_line \
                  + '/restart - Restart the server' + break_line \
                  + '/shutdown - Shutdown the server' + break_line \
                  + '/help - Bot manual' + break_line
