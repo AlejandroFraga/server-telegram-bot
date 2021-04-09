@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Change the working directory to the uninstall.sh directory to avoid problems
+# Change the working directory to the one storing the file to avoid problems
 cd ${0%/*}
 
 # Stop the bot before launching a new one, or there will be problems polling the updates
-./stop_bot.sh
+./stop.sh
 
 # [Optional] For Devs, update the server-telegram-bot files by automatic sftp download in launch
-#./update_bot.sh
+#./update.sh
 
 cd bot
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Change the working directory to the uninstall.sh directory to avoid problems
+# Change the working directory to the one storing the file to avoid problems
 cd ${0%/*}
 
 # Remove git

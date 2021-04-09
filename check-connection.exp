@@ -8,11 +8,8 @@ set user [lindex $argv 0];
 # Direction (ip or url)
 set server [lindex $argv 1];
 
-# Files or folder to paste to
-set paste [lindex $argv 2];
-
 # Password
-set password [lindex $argv 3]
+set password [lindex $argv 2]
 
 # Prompt to detect if the current command ended
 set prompt "#|%|>|\\\$"

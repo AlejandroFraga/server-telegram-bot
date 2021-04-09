@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Some variables
-launch_file="launch_bot.sh"
-update_file="update_bot.sh"
-welcome="Welcome to the installation of the telegram-bot-server. Press enter to start..."
-
-# Change the working directory to the install.sh directory to avoid problems
+# Change the working directory to the one storing the file to avoid problems
 cd ${0%/*}
+
+# Some variables
+launch_file="start.sh"
+update_file="update.sh"
+welcome="Welcome to the installation of the server-telegram-bot. Press enter to start..."
 
 # Welcome message
 read -p "$welcome" -s -r REPLY; echo # Jump line
