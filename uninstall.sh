@@ -3,6 +3,18 @@
 # Change the working directory to the one storing the file to avoid problems
 cd ${0%/*}
 
+# Check if we are inside the server-telegram-bot directory
+if [ "${PWD##*/}" == "server-telegram-bot" ]; then
+
+	# Stop the bot before uninstalling
+	./stop.sh
+	cd ../
+else
+	# Stop the bot before uninstalling
+	./server-telegram-bot/stop.sh
+	rm -- "$0"
+fi
+
 # Remove git
 printf "\nUninstalling git...\n\n"
 sudo apt-get remove git
@@ -28,14 +40,6 @@ sudo apt-get remove python3
 # Remove expect
 printf "\nUninstalling expect...\n\n"
 sudo apt-get remove expect
-
-# Check if we are inside the server-telegram-bot directory
-if [ "${PWD##*/}" == "server-telegram-bot" ]; then
-
-	cd ../
-else
-	rm -- "$0"
-fi
 
 # Remove the repository
 rm -rfv server-telegram-bot
