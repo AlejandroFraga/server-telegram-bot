@@ -11,10 +11,6 @@ welcome="Welcome to the installation of the server-telegram-bot. Press enter to 
 # Welcome message
 read -p "$welcome" -s -r REPLY; echo # Jump line
 
-# [Optional] Install expect for Devs to update the server-telegram-bot files by automatic sftp download in launch
-printf "\n[Optional] Installing expect...\n\n"
-sudo apt-get install expect
-
 # Check if we are inside the server-telegram-bot directory
 if [ "${PWD##*/}" != "server-telegram-bot" ]; then
 
@@ -41,15 +37,10 @@ sudo apt-get install python3
 printf "\nInstalling python3 pip...\n\n"
 sudo apt-get install python3-pip
 
-# Prepare to install speedtest
-printf "\nInstalling speedtest...\n\n"
-sudo apt-get install curl
-curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
-sudo apt-get install speedtest
-
-# Install pip3 virtual env to manage libraries
-printf "\nInstalling pip3 virtual env\n\n"
-pip3 install virtualenv --break-system-packages
+# Install pipx and virtual env to manage libraries
+printf "\nInstalling pipx and virtual env\n\n"
+sudo apt install pipx
+pipx ensurepath
 python3 -m venv bot/venv
 source bot/venv/bin/activate
 
@@ -60,6 +51,12 @@ python3 -m pip install emoji --upgrade
 python3 -m pip install psutil --upgrade
 python3 -m pip install requests --upgrade
 python3 -m pip install "python-telegram-bot[job-queue]" --upgrade
+
+# Prepare to install speedtest
+printf "\nInstalling speedtest...\n\n"
+sudo apt-get install curl
+curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
+sudo apt-get install speedtest
 
 # Change permissions to only allow the owner to read, write and execute the server-telegram-bot files
 printf "\nChanging permissions...\n\n"
