@@ -37,10 +37,8 @@ sudo apt-get install python3
 printf "\nInstalling python3 pip...\n\n"
 sudo apt-get install python3-pip
 
-# Install pipx and virtual env to manage libraries
-printf "\nInstalling pipx and virtual env\n\n"
-sudo apt install pipx
-pipx ensurepath
+# Creating virtual env to manage libraries
+printf "\Creating virtual env\n\n"
 python3 -m venv bot/venv
 source bot/venv/bin/activate
 
