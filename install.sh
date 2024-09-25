@@ -11,34 +11,6 @@ welcome="Welcome to the installation of the server-telegram-bot. Press enter to 
 # Welcome message
 read -p "$welcome" -s -r REPLY; echo # Jump line
 
-# Install python3
-printf "\nInstalling python3...\n\n"
-sudo apt-get install python3
-
-# Install python3 pip to manage packages
-printf "\nInstalling python3 pip...\n\n"
-sudo apt-get install python3-pip
-
-# Install pip3 virtual env to manage libraries
-printf "\nInstalling pip3 virtual env\n\n"
-pip3 install virtualenv --break-system-packages
-python3 -m venv bot/venv
-source bot/venv/bin/activate
-
-# Install python-telegram-bot, emoji, psutil, requests and job-queue packages
-printf "\nInstalling pip packages...\n\n"
-python3 -m pip install python-telegram-bot --upgrade
-python3 -m pip install emoji --upgrade
-python3 -m pip install psutil --upgrade
-python3 -m pip install requests --upgrade
-python3 -m pip install "python-telegram-bot[job-queue]" --upgrade
-
-# Prepare to install speedtest
-printf "\nInstalling speedtest...\n\n"
-sudo apt-get install curl
-curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
-sudo apt-get install speedtest
-
 # [Optional] Install expect for Devs to update the server-telegram-bot files by automatic sftp download in launch
 printf "\n[Optional] Installing expect...\n\n"
 sudo apt-get install expect
@@ -60,6 +32,34 @@ if [ "${PWD##*/}" != "server-telegram-bot" ]; then
 	# Move inside the project directory
 	cd server-telegram-bot
 fi
+
+# Install python3
+printf "\nInstalling python3...\n\n"
+sudo apt-get install python3
+
+# Install python3 pip to manage packages
+printf "\nInstalling python3 pip...\n\n"
+sudo apt-get install python3-pip
+
+# Prepare to install speedtest
+printf "\nInstalling speedtest...\n\n"
+sudo apt-get install curl
+curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
+sudo apt-get install speedtest
+
+# Install pip3 virtual env to manage libraries
+printf "\nInstalling pip3 virtual env\n\n"
+pip3 install virtualenv --break-system-packages
+python3 -m venv bot/venv
+source bot/venv/bin/activate
+
+# Install python-telegram-bot, emoji, psutil, requests and job-queue packages
+printf "\nInstalling pip packages...\n\n"
+python3 -m pip install python-telegram-bot --upgrade
+python3 -m pip install emoji --upgrade
+python3 -m pip install psutil --upgrade
+python3 -m pip install requests --upgrade
+python3 -m pip install "python-telegram-bot[job-queue]" --upgrade
 
 # Change permissions to only allow the owner to read, write and execute the server-telegram-bot files
 printf "\nChanging permissions...\n\n"
