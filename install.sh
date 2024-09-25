@@ -64,7 +64,7 @@ chmod u+x -R *
 
 # Creating and adding the default private data
 printf "\nCreating the private data file...\n\n"
-install -Dv /dev/null .private/data.txt
+install -D /dev/null .private/data.txt
 printf "# Bot private info\nbot_userId=\"bot_userId\"\nbot_apiToken=\"bot_apiToken\"\n" >> $private_file
 
 # Set the user id to talk to the telegram-bot-server
