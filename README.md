@@ -24,9 +24,9 @@ Saving me a lot of time and work creating the
 ## Download and Instalation
 
 ```sh
-$ wget https://raw.githubusercontent.com/AlejandroFraga/server-telegram-bot/main/install.sh -O install.sh
-$ sudo chmod u+x install.sh
-$ ./install.sh
+wget https://raw.githubusercontent.com/AlejandroFraga/server-telegram-bot/main/install.sh -O install.sh
+sudo chmod u+x install.sh
+./install.sh
 ```
 
 ## Project Goals
@@ -47,15 +47,15 @@ This library provides a pure Python interface for the Telegram Bot API. It's com
 You can install or upgrade python-telegram-bot with:
 
 ```sh
-$ pip install python-telegram-bot --upgrade
+pip install python-telegram-bot --upgrade
 ```
 
 Or you can install from source with:
 
 ```sh
-$ git clone https://github.com/python-telegram-bot/python-telegram-bot --recursive
-$ cd python-telegram-bot
-$ python setup.py install
+git clone https://github.com/python-telegram-bot/python-telegram-bot --recursive
+cd python-telegram-bot
+python setup.py install
 ```
 
 ### [psutil][psutil]
@@ -73,7 +73,7 @@ psutil (process and system utilities) is a cross-platform library for retrieving
 You can install or upgrade psutil with:
 
 ```sh
-$ pip install psutil --upgrade
+pip install psutil --upgrade
 ```
 
 ### [Speedtest CLI][speedtest-cli]
