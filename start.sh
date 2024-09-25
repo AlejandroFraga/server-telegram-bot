@@ -6,16 +6,13 @@ cd ${0%/*}
 # Stop the bot before launching a new one, or there will be problems polling the updates
 ./stop.sh
 
-# [Optional] For Devs, update the server-telegram-bot files by automatic sftp download in launch
-#./update.sh
-
-cd bot
-
-userid="userid"
-apitoken="apitoken"
-
 printf "\nLaunching the Bot..."
 
-python3 bot.py $userid $apitoken &
+# Get the private data variables values
+source ".private/data.txt"
+
+cd bot
+source venv/bin/activate
+python3 bot.py $bot_userId $bot_apiToken &
 
 printf "\n\n"

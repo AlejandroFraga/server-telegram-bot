@@ -1,16 +1,15 @@
 import logging
 import os
-import signal
 import sys
 
-from telegram.ext import Updater
-from telegram.message import Message
+from telegram import Update
+from telegram.ext import ApplicationBuilder, Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 import strings
-from commands import CommandManager, CallbackManager
-from daemons import DaemonManager
+import commands
+import server_safety
+import callbacks
 from data_helper import is_list_of_size, get_date
-from messages import MessageManager
 
 # Create the log folder if it doesn't exist
 try:
@@ -20,96 +19,94 @@ except FileExistsError:
 
 # Enable and configure logging
 logging.basicConfig(
-    filename=strings.log_folder + get_date(strings.hyphen),
+    filename=strings.log_folder + get_date(strings.hyphen) + strings.log_file_ext,
     format=strings.log_format,
-    level=logging.INFO
+    level=logging.WARNING
 )
 
 logger = logging.getLogger(__name__)
 
 
-class BotManager:
-    chat_id: int = 0
-    token: str = ''
-    msg_mng: MessageManager = None
-    daemon_mng: DaemonManager = None
-    updater: Updater = None
-    waiting_speedtest: [Message] = None
+class ServerTelegramBot:
+    __chat_id: int
+    __application: Application
+    __server_safety: server_safety.ServerSafety
 
     def __init__(self, chat_id: int, token: str):
-        self.chat_id = chat_id
-        self.token = token
-        self.updater = Updater(self.token)
+        self.__chat_id = chat_id
+        self.__application = ApplicationBuilder().token(token).build()
+        self.__server_safety = server_safety.ServerSafety()
 
-        # Initiate the managers
-        self.msg_mng = MessageManager(self)
-        self.comm_mng = CommandManager(self)
-        self.daemon_mng = DaemonManager(self)
+    def start(self):
+        self.set_command_handlers()
+        self.set_callback_handlers()
 
-    def start_working(self):
-        """
-        Start the bot_mng.
-        """
-
-        self.comm_mng.set_handlers()
+        self.__server_safety.start(self.__application, self.__chat_id)
 
         # Start the Bot
-        self.daemon_mng.start_polling_scheduler()
+        self.__application.run_polling()
 
-    def polling_working(self):
-        # Daemon thread that will ensure the safety of the server
-        self.daemon_mng.start_safety_daemon()
+    def set_command_handlers(self):
+        self.__application.add_handlers([CommandHandler(strings.command_start, self.command_start),
+                                         CommandHandler(strings.command_status, self.command_status),
+                                         CommandHandler(strings.command_speedtest, self.command_speedtest),
+                                         CommandHandler(strings.command_top, self.command_top),
+                                         CommandHandler(strings.command_block, self.command_block),
+                                         CommandHandler(strings.command_restart, self.command_restart),
+                                         CommandHandler(strings.command_shutdown, self.command_shutdown),
+                                         CommandHandler(strings.command_help, self.command_help)])
 
-        # Run the bot_mng until you press Ctrl-C or the process receives SIGINT,
-        # SIGTERM or SIGABRT. This should be used most of the time, since
-        # __start_polling() is non-blocking and will stop the bot_mng gracefully.
-        self.updater.idle()
+    async def command_start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_help(update)
 
-    def stop_bot(self):
-        """
-        Function that stops the bot
-        """
+    async def command_status(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_status(update)
 
-        self.updater.stop()
+    async def command_speedtest(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_speedtest(update)
 
-    @staticmethod
-    def block_ip(ip: str):
-        """
-        Function that shutdowns the server
-        """
+    async def command_top(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            top_result: str = self.__server_safety.top()
+            await commands.command_top(update, top_result)
 
-        if ip is not None and ip.__len__() > 0:
-            os.system('sudo iptables -A INPUT -s ' + ip + ' -j DROP')
+    async def command_block(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_block(update)
 
-    @staticmethod
-    def restart_server():
-        """
-        Function that restarts the server
-        """
+    async def command_restart(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_restart(update)
 
-        os.system('sudo shutdown -r now')
+    async def command_shutdown(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_shutdown(update)
 
-    @staticmethod
-    def shutdown_server():
-        """
-        Function that shutdowns the server
-        """
+    async def command_help(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await commands.command_help(update)
 
-        os.system('sudo shutdown now')
+    def set_callback_handlers(self):
+        self.__application.add_handler(CallbackQueryHandler(self.callbacks))
 
-    @staticmethod
-    def quit_bot():
-        """
-        Function that stops the bot
-        """
+    async def callbacks(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.is_own_chat(update.effective_chat.id):
+            await callbacks.callbacks(update.callback_query)
 
-        os.kill(os.getpid(), signal.SIGINT)
+    def is_own_chat(self, chat_id: int) -> bool:
+        return self.__chat_id == chat_id
 
 
-def main(args):
+def main(args) -> None:
     if is_list_of_size(args, 3):
-        bot_manager = BotManager(int(args[1]), args[2])
-        bot_manager.start_working()
+        bot = ServerTelegramBot(int(args[1]), args[2])
+        bot.start()
+
+    else:
+        print('You are missing parameters, please check the README.md')
 
 
 if __name__ == "__main__":

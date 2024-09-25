@@ -1,13 +1,10 @@
-"""
-
-"""
 import logging
 import time
 
 import emoji
 import psutil
 from requests import get
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, Message
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton, Message, Chat, Bot, MaybeInaccessibleMessage
 
 import buttons
 import strings
@@ -16,10 +13,6 @@ from data_helper import is_str, is_list, is_list_of_size, get_date_hour, format_
 
 
 # MESSAGES
-
-
-def stop_message():
-    return strings.stop_text, [buttons.stop], [2]
 
 
 def info_message():
@@ -228,7 +221,6 @@ def top_message(top_result: str = ''):
 
 
 def block_message(ip: str):
-
     block_button = buttons.block.copy()
     block_button[1] += strings.hyphen + ip
 
@@ -252,131 +244,147 @@ class MessageManager:
     def __init__(self, bot_manager):
         self.bot_mng = bot_manager
         self.chat_id = bot_manager.chat_id
-        self.bot = bot_manager.updater.bot
 
-    @staticmethod
-    def __append_dismiss_callback_callbacks(callbacks: list = None):
 
-        # If callbacks is not a list, create an empty one
-        if not is_list(callbacks):
-            callbacks = []
+def __append_dismiss_callback_callbacks(callbacks: list = None):
+    # If callbacks is not a list, create an empty one
+    if not is_list(callbacks):
+        callbacks = []
 
-        # Append the dismiss callback and return
-        callbacks.append(buttons.dismiss)
+    # Append the dismiss callback and return
+    callbacks.append(buttons.dismiss)
 
-        return callbacks
+    return callbacks
 
-    @staticmethod
-    def __append_dismiss_callback_sizes(sizes: list = None):
 
-        # If sizes is a not empty list, append the last size at the end
-        if is_list_of_min_size(sizes, 1):
-            sizes.append(sizes[-1])
+def __append_dismiss_callback_sizes(sizes: list = None):
+    # If sizes is a not empty list, append the last size at the end
+    if is_list_of_min_size(sizes, 1):
+        sizes.append(sizes[-1])
 
-        # Otherwise, create a list with a 1 in it
-        else:
-            sizes = [1]
+    # Otherwise, create a list with a 1 in it
+    else:
+        sizes = [1]
 
-        return sizes
+    return sizes
 
-    @staticmethod
-    def __append_dismiss_callback(callbacks: list = None, sizes: list = None):
 
-        callbacks = MessageManager.__append_dismiss_callback_callbacks(callbacks)
-        sizes = MessageManager.__append_dismiss_callback_sizes(sizes)
+def __append_dismiss_callback(callbacks: list = None, sizes: list = None):
+    callbacks = __append_dismiss_callback_callbacks(callbacks)
+    sizes = __append_dismiss_callback_sizes(sizes)
 
-        return callbacks, sizes
+    return callbacks, sizes
 
-    # TODO clean
-    @staticmethod
-    def __make_reply_markup(callbacks: list, sizes: list, add_dismiss: bool):
 
-        if add_dismiss:
-            callbacks, sizes = MessageManager.__append_dismiss_callback(callbacks, sizes)
+# TODO clean
+def __make_reply_markup(callbacks: list, sizes: list, add_dismiss: bool):
+    if add_dismiss:
+        callbacks, sizes = __append_dismiss_callback(callbacks, sizes)
 
-        if is_list_of_min_size(callbacks) and is_list_of_min_size(sizes):
-            keyboard = []
-            line = []
-            keyboard.append(line)
+    if is_list_of_min_size(callbacks) and is_list_of_min_size(sizes):
+        keyboard = []
+        line = []
+        keyboard.append(line)
 
-            #
-            i, n = 0, 1
-            for callback in callbacks:
+        #
+        i, n = 0, 1
+        for callback in callbacks:
 
-                if is_list_of_size(callback, 2) and i < sizes.__len__() \
-                        and is_str(callback[0]) and callback[1] is not None:
+            if is_list_of_size(callback, 2) and i < sizes.__len__() \
+                    and is_str(callback[0]) and callback[1] is not None:
 
-                    text = emoji.emojize(callback[0])
-                    line.append(InlineKeyboardButton(text, callback_data=str(callback[1])))
+                text = emoji.emojize(callback[0])
+                line.append(InlineKeyboardButton(text, callback_data=str(callback[1])))
 
-                    #
-                    if sizes[i] <= n:
-                        n = 1
-                        line = []
-                        keyboard.append(line)
+                #
+                if sizes[i] <= n:
+                    n = 1
+                    line = []
+                    keyboard.append(line)
 
-                    #
-                    else:
-                        n += 1
+                #
+                else:
+                    n += 1
 
-                i += 1
+            i += 1
 
-            return InlineKeyboardMarkup(keyboard)
+        return InlineKeyboardMarkup(keyboard)
 
-        return None
+    return None
 
-    # TODO move
-    @staticmethod
-    def __split_message(message: any):
 
-        if is_tuple(message):
-            message = list(message)
+# TODO move
+def __split_message(message: any):
+    if is_tuple(message):
+        message = list(message)
 
-        if is_list(message):
-            text = MessageManager.__format_text(message[0]) if message.__len__() > 0 else None
-            callbacks = message[1] if message.__len__() > 1 else None
-            sizes = message[2] if message.__len__() > 2 else None
-            return text, callbacks, sizes
+    if is_list(message):
+        text = __format_text(message[0]) if message.__len__() > 0 else None
+        callbacks = message[1] if message.__len__() > 1 else None
+        sizes = message[2] if message.__len__() > 2 else None
+        return text, callbacks, sizes
 
-        elif is_str(message):
-            return MessageManager.__format_text(message), None, None
+    elif is_str(message):
+        return __format_text(message), None, None
 
-    # TODO move
-    @staticmethod
-    def __format_text(text: str):
-        return format_table_row(get_date_hour(), separator=False) + '\n\n'\
-               + emoji.emojize(str(text))
 
-    @staticmethod
-    def edit_message(original: Message, message: any, add_dismiss: bool = True):
-        """
+# TODO move
+def __format_text(text: str):
+    return format_table_row(get_date_hour(), separator=False) + '\n\n' \
+        + emoji.emojize(str(text))
 
-        :param original:
-        :param message:
-        :param add_dismiss:
-        :return:
-        """
 
-        text, callbacks, sizes = MessageManager.__split_message(message)
+async def edit_message(message: Message, new_message: any, add_dismiss: bool = True):
+    """
 
-        # Get Reply Markup
-        reply_markup = MessageManager.__make_reply_markup(callbacks, sizes, add_dismiss)
+    :param message:
+    :param new_message:
+    :param add_dismiss:
+    :return:
+    """
 
-        return original.edit_text(text=text, parse_mode='HTML', disable_web_page_preview=True,
-                                  reply_markup=reply_markup)
+    text, callbacks, sizes = __split_message(new_message)
 
-    def send_message(self, message: any, reply_to: str = None, add_dismiss: bool = True):
-        """
+    # Get Reply Markup
+    reply_markup = __make_reply_markup(callbacks, sizes, add_dismiss)
 
-        :param message:
-        :param reply_to:
-        :param add_dismiss:
-        :return:
-        """
+    result = await message.edit_text(
+        text=text,
+        parse_mode='HTML',
+        disable_web_page_preview=True,
+        reply_markup=reply_markup)
 
-        text, callbacks, sizes = MessageManager.__split_message(message)
+    return result
 
-        # Get Reply Markup
-        reply_markup = MessageManager.__make_reply_markup(callbacks, sizes, add_dismiss)
 
-        return self.bot.send_message(self.chat_id, text, 'HTML', True, False, reply_to, reply_markup)
+async def send_message(chat: Chat, message: any, reply_to: int = None, add_dismiss: bool = True):
+    """
+
+    :param chat:
+    :param message:
+    :param reply_to:
+    :param add_dismiss:
+    :return:
+    """
+
+    text, callbacks, sizes = __split_message(message)
+
+    # Get Reply Markup
+    reply_markup = __make_reply_markup(callbacks, sizes, add_dismiss)
+
+    result: Message = await chat.send_message(
+        text=text,
+        parse_mode='HTML',
+        disable_web_page_preview=True,
+        disable_notification=False,
+        reply_to_message_id=reply_to,
+        reply_markup=reply_markup)
+
+    return result
+
+
+async def delete_message_and_reply(message: Message | None):
+    if message is not None:
+        if message.reply_to_message is not None:
+            await message.reply_to_message.delete()
+        await message.delete()

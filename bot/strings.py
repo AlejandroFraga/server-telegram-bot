@@ -18,6 +18,8 @@ process_memory_percent: str = 'memory_percent'
 process_cpu_num: str = 'cpu_num'
 process_cmdline: str = 'cmdline'
 process_cpu_percent: str = 'cpu_percent'
+restart_server_linux: str = 'sudo shutdown -r now'
+shutdown_server_linux: str = 'sudo shutdown now'
 
 # General strings
 empty: str = ''
@@ -31,11 +33,11 @@ question_mark: str = '?'
 
 # Logs
 log_folder: str = 'logs/'
+log_file_ext: str = '.txt'
 log_format: str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 # Commands
 command_start: str = 'start'
-command_stop: str = 'stop'
 command_status: str = 'status'
 command_speedtest: str = 'speedtest'
 command_top: str = 'top'
@@ -72,15 +74,10 @@ a_close_1: str = '">'
 a_close_2: str = '</a>'
 
 # Speedtest
-speedtest_bash: str = 'speedtest'
+speedtest_bash: str = 'speedtest --accept-gdpr'
 utf_8: str = 'utf-8'
 
 # SECTIONS
-
-# Stop
-stop_text: str = 'Are you sure you want to <b>stop the server bot</b>?'
-stop_button_text: str = ':stop_sign: Stop'
-stop_callback_text: str = 'Stopping...'
 
 # Top
 top_text: str = ':1st_place_medal: Top access tries' + break_line + break_line
@@ -131,6 +128,7 @@ speedtest_wait_test: str = "Please, wait for the result"
 block_text: str = 'Are you sure you want to <b>block the IP</b> '
 block_button_text: str = ':shield: Block'
 block_callback_text: str = 'IP Blocked: '
+block_help_text: str = 'You have to provide <b>a valid IP</b> after the /ip command'
 
 # Restart
 restart_text: str = 'Are you sure you want to <b>restart the server</b>?'
@@ -151,8 +149,7 @@ help_text: str = 'Server Telegram Bot' + break_line \
                  + 'and sends you messages informing about any problems or warnings' + break_line \
                  + break_line \
                  + 'Commands' + break_line \
-                 + '/start - Start the bot after stopping or manual if already running' + break_line \
-                 + '/stop - Stop the bot' + break_line \
+                 + '/start - Bot manual (same as /help)' + break_line \
                  + '/status - Status of the server (CPU, RAM...)' + break_line \
                  + '/speedtest - Internet speed test' + break_line \
                  + '/top - Top access tries to the server' + break_line \

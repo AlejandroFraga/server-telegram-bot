@@ -128,5 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# PyCharm Idea folder
+# IntelliJ Idea folder
+.idea/
 */.idea/
+
+# Private folder
+.private/
+
+# Logs folder
+logs/*
+*/logs/*

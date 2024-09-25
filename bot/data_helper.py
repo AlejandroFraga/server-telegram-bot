@@ -1,6 +1,7 @@
 """
 Some functions to help rest of the game process and treat data easily
 """
+import os
 import re
 import time
 from enum import Enum
@@ -10,23 +11,6 @@ import strings
 kb = 1024
 mb = kb * kb
 gb = mb * kb
-
-
-def safe_cast(val, to_type, default=None):
-    """
-    Safe cast to the desired type, returning the default value if the
-    cast can't be successfully done
-
-    :param val: value to be casted
-    :param to_type: type to be casted
-    :param default: default value to return in case of can't cast the value to the type
-    :return: The value casted to the type, default value if can't be done
-    """
-
-    try:
-        return to_type(val)
-    except (ValueError, TypeError):
-        return default
 
 
 def is_(var: any, v_type: type = None):

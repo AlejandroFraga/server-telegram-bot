@@ -5,7 +5,7 @@ cd ${0%/*}
 
 # Some variables
 launch_file="start.sh"
-update_file="update.sh"
+private_file=".private/data.txt"
 welcome="Welcome to the installation of the server-telegram-bot. Press enter to start..."
 
 # Welcome message
@@ -19,24 +19,24 @@ sudo apt-get install python3
 printf "\nInstalling python3 pip...\n\n"
 sudo apt-get install python3-pip
 
-# Install python-telegram-bot, psutil and emoji packages
+# Install pip3 virtual env to manage libraries
+printf "\nInstalling pip3 virtual env\n\n"
+pip3 install virtualenv --break-system-packages
+python3 -m venv bot/venv
+source bot/venv/bin/activate
+
+# Install python-telegram-bot, emoji, psutil, requests and job-queue packages
 printf "\nInstalling pip packages...\n\n"
-pip3 install python-telegram-bot --upgrade
-pip3 install psutil --upgrade
-pip3 install emoji --upgrade
+python3 -m pip install python-telegram-bot --upgrade
+python3 -m pip install emoji --upgrade
+python3 -m pip install psutil --upgrade
+python3 -m pip install requests --upgrade
+python3 -m pip install "python-telegram-bot[job-queue]" --upgrade
 
 # Prepare to install speedtest
 printf "\nInstalling speedtest...\n\n"
-sudo apt-get install gnupg1 apt-transport-https dirmngr
-export INSTALL_KEY=379CE192D401AB61
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
-echo "deb https://ookla.bintray.com/debian generic main" | sudo tee  /etc/apt/sources.list.d/speedtest.list
-sudo apt-get update
-
-# [Optional] Other non-official binaries will conflict with Speedtest CLI
-sudo apt-get remove speedtest-cli
-
-# Install speedtest
+sudo apt-get install curl
+curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
 sudo apt-get install speedtest
 
 # [Optional] Install expect for Devs to update the server-telegram-bot files by automatic sftp download in launch
@@ -59,60 +59,28 @@ if [ "${PWD##*/}" != "server-telegram-bot" ]; then
 
 	# Move inside the project directory
 	cd server-telegram-bot
-
 fi
 
-# Change permissions to only allow the owner to read, write and execute the server-telegram-bot files 
+# Change permissions to only allow the owner to read, write and execute the server-telegram-bot files
 printf "\nChanging permissions...\n\n"
 chmod u+x -R *
+
+# Creating and adding the default private data
+printf "\nCreating the private data file...\n\n"
+install -Dv /dev/null .private/data.txt
+printf "# Bot private info\nbot_userId=\"bot_userId\"\nbot_apiToken=\"bot_apiToken\"\n" >> $private_file
 
 # Set the user id to talk to the telegram-bot-server
 read -p "Please insert the telegram user id which will talk to the telegram-bot-server: " -r REPLY; echo # Jump line
 if [ -n "$REPLY" ]; then
-	sed -i -e 's,userid=".*",userid="'"$REPLY"'",g' $launch_file
+	sed -i -e 's,bot_userId=".*",bot_userId="'"$REPLY"'",g' $private_file
 fi
 
 # Set the api token of the telegram-bot-server
 read -p "Please insert the Telegram Bot API Token: " -r REPLY; echo # Jump line
 if [ -n "$REPLY" ]; then
-	sed -i -e 's,apitoken=".*",apitoken="'"$REPLY"'",g' $launch_file
+	sed -i -e 's,bot_apiToken=".*",bot_apiToken="'"$REPLY"'",g' $private_file
 fi
-
-# [Optional] Activate the auto update option in the launch script
-# Usefull for Dev who doesn't want to be copying by hand in every modification and relaunch of the bot
-read -p "Do you want to enable the update when launching option for Devs? [Y/y] " -n 1 -r REPLY; echo # Jump line
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-	sed -i -e 's,#\.\/'"$update_file"',\.\/'"$update_file"',g' $launch_file
-
-	read -p "Enter the username of the server to update: " -r REPLY; echo # Jump line
-	if [ -n "$REPLY" ]; then
-		sed -i -e 's,user=".*",user="'"$REPLY"'",g' $update_file
-	fi
-
-	read -p "Enter the direction (ip or url) of the server: " -r REPLY; echo # Jump line
-	if [ -n "$REPLY" ]; then
-		sed -i -e 's,server=".*",server="'"$REPLY"'",g' $update_file
-	fi
-
-	read -p "Enter the directory/file/s you want to copy from the server: " -r REPLY; echo # Jump line
-	if [ -n "$REPLY" ]; then
-		sed -i -e 's,copy=".*",copy="'"$REPLY"'",g' $update_file
-	fi
-
-	read -p "Enter the directory/file/s you want to paste to the server: " -r REPLY; echo # Jump line
-	if [ -n "$REPLY" ]; then
-		sed -i -e 's,paste=".*",paste="'"$REPLY"'",g' $update_file
-	fi
-
-	read -p "Enter the password of the user of the server: " -s -r REPLY; echo # Jump line
-	if [ -n "$REPLY" ]; then
-		sed -i -e 's,password=".*",password="'"$REPLY"'",g' $update_file
-	fi
-fi
-
-# Make the first speedtest so we accept the policy and check that works
-printf "\nMaking the first speedtest so we accept the policy and check that works...\n"
-speedtest
 
 printf "\nInstallation process ended\n\n"
 

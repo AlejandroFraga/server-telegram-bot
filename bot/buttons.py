@@ -15,7 +15,6 @@ class Callback(Enum):
     block = 101
     shutdown = 102
     restart = 103
-    stop = 104
 
     # Status callbacks 2XX
     status = 2
@@ -29,8 +28,6 @@ class Callback(Enum):
 
 
 dismiss = [strings.dismiss_button_text, get_value(Callback.dismiss)]
-
-stop = [strings.stop_button_text, get_value(Callback.stop.value)]
 
 back_info = [strings.back_button_text, get_value(Callback.info)]
 
