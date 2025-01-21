@@ -83,7 +83,7 @@ utf_8: str = 'utf-8'
 top_text: str = ':1st_place_medal: Top access tries' + break_line + break_line
 
 # Safety
-auth_log: str = '/var/log/auth.log'
+journalctl: str = 'journalctl -u ssh.service -b --no-pager'
 warning_title: str = ':warning: WARNING'
 location_text: str = 'Location'
 

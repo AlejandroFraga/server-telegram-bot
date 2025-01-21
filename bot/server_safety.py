@@ -1,4 +1,5 @@
 import logging
+import subprocess
 
 import emoji
 from telegram.ext import Application, ContextTypes
@@ -53,35 +54,25 @@ class ServerSafety:
         return text
 
     def __first_safety_check(self):
-        try:
-            file = open(strings.auth_log, 'r')
-            with file:
-                for line in file.readlines():
-                    ip = data_helper.get_first_ip(line)
-                    if not self.__ip_ignored(ip):
+        result = subprocess.run(strings.journalctl.split(strings.space), stdout=subprocess.PIPE)
 
-                        if ip in self.__lines.keys():
-                            if line not in self.__lines[ip]:
-                                self.__lines[ip].append(line)
-                                self.__top[ip] += 1
-                        else:
-                            self.__lines[ip] = [line]
-                            self.__top[ip] = 1
-                file.close()
+        for line in result.stdout.decode(strings.utf_8).split(strings.break_line):
+            ip = data_helper.get_first_ip(line)
+            if not self.__ip_ignored(ip):
 
-        except OSError:
-            logging.log(logging.ERROR, 'Could not open/read file: %s', strings.auth_log)
+                if ip in self.__lines.keys():
+                    if line not in self.__lines[ip]:
+                        self.__lines[ip].append(line)
+                        self.__top[ip] += 1
+                else:
+                    self.__lines[ip] = [line]
+                    self.__top[ip] = 1
 
     async def __safety_check(self, context: ContextTypes.DEFAULT_TYPE):
-        try:
-            file = open(strings.auth_log, 'r')
-            with file:
-                for line in file.readlines():
-                    await self.__add_line(line, context)
-                file.close()
+        result = subprocess.run(strings.journalctl.split(strings.space), stdout=subprocess.PIPE)
 
-        except OSError:
-            logging.log(logging.ERROR, 'Could not open/read file: %s', strings.auth_log)
+        for line in result.stdout.decode(strings.utf_8).split(strings.break_line):
+            await self.__add_line(line, context)
 
     async def __add_line(self, line: str, context: ContextTypes.DEFAULT_TYPE):
         ip = data_helper.get_first_ip(line)
